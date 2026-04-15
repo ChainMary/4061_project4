@@ -14,6 +14,30 @@ int seq_ctr = 0;
 char *read_line(char *fname, int line_no)
 {
 	// TODO
+	if(fname == NULL || line_no <= 0){ //error handling 
+		return NULL;
+	}
+	FILE *fp = fopen(fname, "r"); 
+	if(fp == NULL){ //error handling
+		return NULL;
+	}
+	char buffer[257]; // 256 chars + null terminator
+	int curr_line_no = 0;
+	while(fgets(buffer, sizeof(buffer), fp) != NULL){
+		curr_line_no++;
+		if(curr_line_no == line_no){ //line found
+			char *line = malloc(strlen(buffer) + 1); //heap allocated copy
+			if(line == NULL){
+				fclose(fp);
+				return NULL;
+			}
+			strcpy(line, buffer); //dont need strncpy because it is 256 chars + null terminator
+			fclose(fp);
+			return line;
+		}
+	}
+	fclose(fp);
+	return NULL;
 }
 
 // traverse the linked list
